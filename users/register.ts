@@ -2,7 +2,7 @@ import {PrismaClient} from "@prisma/client";
 import app from "../app";
 import { Request , Response } from "express";
 import {z} from "zod";
-
+import bcrypt from "bcrypt";
 
 const  prisma = new PrismaClient();
 
