@@ -4,14 +4,14 @@ import { Request , Response } from "express";
 import {z} from "zod";
 import bcrypt from "bcrypt";
 import express , {Express} from "express";
-import jwt from "jsonwebtoken";
+import jwt,{ Secret }   from "jsonwebtoken";
 import dotenv from "dotenv";
-dotenv.config({path:__dirname+"./.env"});
+// dotenv.config({path:__dirname+"./.env"});
 const  prisma = new PrismaClient();
 const app : Express =express()
 
 
-const userSchema = z.object({username:z.string(),password:z.string(),RepeatPassword:z.string(),projects:z.string().array(),isMatched:z.string()}).superRefine(
+const userSchema = z.object({username:z.string(),password:z.string(),RepeatPassword:z.string(),projects:z.string().array()}).superRefine(
     ({password,RepeatPassword},ctx)=>{
 
 if(password!=RepeatPassword){
@@ -35,19 +35,16 @@ Projects : string[]
 }
 
 app.post('/register',async(req:Request,res:Response)=>{
-    console.log("hello")
+    console.log(process.env.secret)
 try {
 
     const body  : userdetails= req.body;
 
 const result=userSchema.safeParse(req.body);
 
-if(!result.success){
+if(!result.success) return res.send(result.error.errors[0].message);
 
-res.send(result.error)
 
-}
-else{
   
 const salted = bcrypt.genSaltSync(10)
 const hashpassword = bcrypt.hashSync(body.password,salted)
@@ -56,10 +53,11 @@ const hashedrepeat = bcrypt.hashSync(body.RepeatPassword,salted)
 
     const data = await prisma.engineers.create({data:{username:body.username,password:hashpassword,RepeatPassword:hashedrepeat,Projects:body.Projects}})
     
-// const token = jwt.sign(data,process.env.secret)
-res.send()
+const token = jwt.sign(body,`${process.env.secret}`,{expiresIn:60*60})
+res.header("token",token)
+res.send(data)
 
-}
+
 
         
 } catch (error) {

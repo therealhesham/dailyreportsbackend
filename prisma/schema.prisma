@@ -18,7 +18,11 @@ Projects String[]
 
 
 }
+model projects{
+  id       String @id @default(auto()) @map("_id") @db.ObjectId
+projects String[]
 
+}
 
 
 model DailyReports {
