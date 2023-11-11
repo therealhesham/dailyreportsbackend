@@ -21,7 +21,7 @@ if(password!=RepeatPassword){
     
 })
 
-export interface userdetails{
+ interface userdetails{
 
 username : string,
 password : string,
