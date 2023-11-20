@@ -5,8 +5,7 @@ import {z} from "zod";
 import bcrypt from "bcrypt";
 import express , {Express} from "express";
 import jwt,{ Secret }   from "jsonwebtoken";
-import dotenv from "dotenv";
-// dotenv.config({path:__dirname+"./.env"});
+
 const  prisma = new PrismaClient();
 const app : Express =express()
 

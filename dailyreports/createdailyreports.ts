@@ -25,7 +25,7 @@ interface DailyReports {
 app.post("/create",async(req:Request,res:Response)=>{
 const {contractorName,Teams,location,TypeOfProject,details,date,notes,engineerName,projectManager}:DailyReports=req.body;
 
-const data =  Prisma.dailyReports.create({data:{contractorName,Teams,location,TypeOfProject,details,date,notes,engineerName,projectManager}})
+const data = await Prisma.dailyReports.create({data:{contractorName,Teams,location,TypeOfProject,details,date,notes,engineerName,projectManager}})
 
 
 res.send(data)
